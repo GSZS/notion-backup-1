@@ -7,7 +7,7 @@ let axios = require('axios')
   , { createWriteStream, mkdirSync, rmdirSync } = require('fs')
   , { join } = require('path')
   , notionAPI = 'https://www.notion.so/api/v3'
-  , { NOTION_TOKEN, NOTION_SPACE_ID } = process.env
+  , { NOTION_TOKEN, NOTION_SPACE_ID, EXPORT_FORMAT } = process.env
   , client = axios.create({
       baseURL: notionAPI,
       headers: {
@@ -91,21 +91,27 @@ async function exportFromNotion (format) {
   }
 }
 
+
 async function run () {
-  let cwd = process.cwd()
-    , mdDir = join(cwd, 'markdown')
-    , mdFile = join(cwd, 'markdown.zip')
-    , htmlDir = join(cwd, 'html')
-    , htmlFile = join(cwd, 'html.zip')
-  ;
-  await exportFromNotion('markdown');
-  rmdirSync(mdDir, { recursive: true });
-  mkdirSync(mdDir, { recursive: true });
-  await extract(mdFile, { dir: mdDir });
-  await exportFromNotion('html');
-  rmdirSync(htmlDir, { recursive: true });
-  mkdirSync(htmlDir, { recursive: true });
-  await extract(htmlFile, { dir: htmlDir });
+  let cwd = process.cwd();
+  /**
+   * EXPORT_FORMAT has two types: markdown and html.
+   */
+  function pathFn(formatType) {
+    return join(cwd, formatType);
+  }
+
+  if (!EXPORT_FORMAT) {
+    await exportFromNotion('markdown');
+    rmdirSync(pathFn('markdown'), { recursive: true });
+    mkdirSync(pathFn('markdown'), { recursive: true });
+    await extract(pathFn('markdown.zip'), { dir: pathFn('markdown') });
+  } else {
+    await exportFromNotion(EXPORT_FORMAT);
+    rmdirSync(pathFn(EXPORT_FORMAT), { recursive: true });
+    mkdirSync(pathFn(EXPORT_FORMAT), { recursive: true });
+    await extract(pathFn(`${EXPORT_FORMAT}.zip`), { dir: pathFn(EXPORT_FORMAT) });
+  }
 }
 
 run();
