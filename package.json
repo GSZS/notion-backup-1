@@ -1,25 +1,17 @@
 {
-  "name": "notion-backup",
+  "name": "autoexport_notion_content",
   "version": "1.2.0",
-  "description": "Notion exporter meant to be used as part of a GitHub workflow",
+  "description": "This library is forked from darobin/notion-backup, but with the addition of independent selection of the export type.",
   "main": "./notion-backup.js",
   "bin": {
     "notion-backup": "./notion-backup.js",
     "notion-backup-item": "./notion-backup-item.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/darobin/notion-backup.git"
-  },
   "eslintConfig": {
     "extends": "robin"
   },
-  "author": "Robin Berjon <robin@berjon.com>",
+  "author": "gszs",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/darobin/notion-backup/issues"
-  },
-  "homepage": "https://github.com/darobin/notion-backup",
   "devDependencies": {
     "eslint-config-robin": "^6.1.3"
   },
