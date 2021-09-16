@@ -58,9 +58,7 @@ async function exportFromNotion (format) {
     ;
     while (true) {
       await sleep(2);
-      // TODO: 跳过某些Page的ID
-      if (taskId !== 'ce151fa303c648328c40cae43151e1be') {
-        let { data: { results: tasks } } = await retry(
+      let { data: { results: tasks } } = await retry(
           { times: 3, interval: 2000 },
           async () => post('getTasks', { taskIds: [taskId] })
         );
@@ -76,7 +74,6 @@ async function exportFromNotion (format) {
           exportURL = task.status.exportURL;
           break;
         }
-      }
     }
     let res = await client({
       method: 'GET',
